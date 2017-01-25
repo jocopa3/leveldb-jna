@@ -8,7 +8,7 @@ public class LevelDBOptions implements AutoCloseable {
     private boolean createIfMissing = false;
     private boolean errorIfExists = false;
     private boolean paranoidChecks = false;
-    private LevelDBCompressionType compressionType = LevelDBCompressionType.SnappyCompression;
+    private LevelDBCompressionType compressionType = LevelDBCompressionType.ZLibCompression;
     private long writeBufferSize = 4 * 1024 * 1204;
     private int maxOpenFiles = 1000;
     private long blockSize = 4096;

@@ -52,7 +52,6 @@
 
   <modules>
     <module>leveldb-jna-core</module>
-    <module>leveldb-jna-native</module>
   </modules>
 
   <properties>
@@ -86,19 +85,6 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.6</version>
-        <executions>
-          <execution>
-            <id>sign-jars</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
 
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>

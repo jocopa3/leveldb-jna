@@ -4,6 +4,7 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
+import java.nio.ByteBuffer;
 
 public class LevelDB implements AutoCloseable {
     protected LevelDBNative.LevelDB levelDB;
@@ -23,7 +24,7 @@ public class LevelDB implements AutoCloseable {
         levelDB = null;
     }
 
-    public byte[] get(byte[] key, LevelDBReadOptions readOptions) {
+    public ByteBuffer getByteBuffer(byte[] key, LevelDBReadOptions readOptions) {
         checkDatabaseOpen();
         readOptions.checkReadOptionsOpen();
 
@@ -46,7 +47,38 @@ public class LevelDB implements AutoCloseable {
             resultLength = resultLengthPointer.getPointer().getInt(0);
         }
 
-        return result != null ? result.getPointer().getByteArray(0, (int) resultLength) : null;
+        return result != null ? result.getPointer().getByteBuffer(0, (int) resultLength) : null;
+    }
+    
+    public byte[] get(byte[] key, LevelDBReadOptions readOptions) {
+        checkDatabaseOpen();
+        readOptions.checkReadOptionsOpen();
+
+        PointerByReference resultLengthPointer = new PointerByReference();
+
+        PointerByReference result;
+        long resultLength;
+        PointerByReference error = new PointerByReference();
+        if (Native.POINTER_SIZE == 8) {
+            long keyLength = key != null ? key.length : 0;
+            result = LevelDBNative.leveldb_get(levelDB, readOptions.readOptions, key, keyLength, resultLengthPointer, error);
+            LevelDBNative.checkError(error);
+
+            resultLength = resultLengthPointer.getPointer().getLong(0);
+        } else {
+            int keyLength = key != null ? key.length : 0;
+            result = LevelDBNative.leveldb_get(levelDB, readOptions.readOptions, key, keyLength, resultLengthPointer, error);
+            LevelDBNative.checkError(error);
+
+            resultLength = resultLengthPointer.getPointer().getInt(0);
+        }
+        
+        byte[] returnValue = result != null ? result.getPointer().getByteArray(0, (int) resultLength) : null;
+        
+        if(result != null)
+            LevelDBNative.leveldb_free(result.getPointer());
+        
+        return returnValue;
     }
 
     public void put(byte[] key, byte[] value, LevelDBWriteOptions writeOptions) {

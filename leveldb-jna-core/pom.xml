@@ -23,25 +23,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- JUnit -->
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- LevelDB JNA Native Binaries (dependency for tests only) -->
-
-        <dependency>
-            <groupId>com.protonail.leveldb-jna</groupId>
-            <artifactId>leveldb-jna-native</artifactId>
-            <version>1.18.0</version>
-            <classifier>${platform.classifier}</classifier>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
